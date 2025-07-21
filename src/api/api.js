@@ -14,3 +14,5 @@ export const getSales = () => API.get('/sale');
 
 // Stock
 export const getStock = () => API.get('/stock');
+
+export default API;
