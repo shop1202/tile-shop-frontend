@@ -19,8 +19,8 @@ function Home() {
   const fetchData = async () => {
     try {
       const [purchases, sales] = await Promise.all([
-        axios.get(`${apiBaseUrl}/api/purchase`),
-        axios.get(`${apiBaseUrl}/api/sale`),
+        axios.get(`${apiBaseUrl}/api/purchase`,data),
+        axios.get(`${apiBaseUrl}/api/sale`,data),
       ]);
       setPurchaseHistory(purchases.data);
       setSaleHistory(sales.data);
@@ -68,7 +68,7 @@ function Home() {
   }
 
   try {
-    await axios.post(`${apiBaseUrl}/api/purchase`, { items: validRows });
+    await axios.post(`${apiBaseUrl}/api/purchase`,{ items: validRows });
     fetchData(); // refresh purchase & sale data
     setRows([{ name: "", size: "", quantity: "", rate: "" }]);
     alert("Purchase saved!");
@@ -101,7 +101,7 @@ function Home() {
   }
 
   try {
-    await axios.post(`${apiBaseUrl}/api/sale`, { items: validRows });
+    await axios.post(`${apiBaseUrl}/api/sale`,{ items: validRows });
     fetchData(); // refresh stock
     setRows([{ name: "", size: "", quantity: "", rate: "" }]);
     alert("Sale saved!");
