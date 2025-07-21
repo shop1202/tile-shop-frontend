@@ -18,7 +18,7 @@ function Home() {
   const fetchData = async () => {
     try {
       const [purchases, sales] = await Promise.all([
-        axios.get("http://192.168.1.9:3001/api/purchase"),
+        axios.get(`${apiBaseUrl}/api/purchase`),
         axios.get("http://192.168.1.9:3001/api/sale"),
       ]);
       setPurchaseHistory(purchases.data);
@@ -67,7 +67,7 @@ function Home() {
   }
 
   try {
-    await axios.post("http://192.168.1.9:3001/api/purchase", { items: validRows });
+    await axios.post(`${apiBaseUrl}/api/purchase`, { items: validRows });
     fetchData(); // refresh purchase & sale data
     setRows([{ name: "", size: "", quantity: "", rate: "" }]);
     alert("Purchase saved!");
