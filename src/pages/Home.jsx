@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const apiBaseUrl = process.env.REACT_APP_API_URL;
 function Home() {
   const [rows, setRows] = useState([{ name: "", size: "", quantity: "", rate: "" }]);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
