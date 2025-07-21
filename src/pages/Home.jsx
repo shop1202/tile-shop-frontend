@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const apiBaseUrl = process.env.REACT_APP_API_URL;
+
 function Home() {
   const [rows, setRows] = useState([{ name: "", size: "", quantity: "", rate: "" }]);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
@@ -11,7 +12,6 @@ function Home() {
 
   const navigate = useNavigate();
 
-  // ✅ Load purchase & sale history on mount
   useEffect(() => {
     fetchData();
   }, []);
@@ -19,8 +19,8 @@ function Home() {
   const fetchData = async () => {
     try {
       const [purchases, sales] = await Promise.all([
-        axios.get(`${apiBaseUrl}/api/purchase`,data),
-        axios.get(`${apiBaseUrl}/api/sale`,data),
+        axios.get(`${apiBaseUrl}/api/purchase`),  // ✅ FIXED: removed extra argument
+        axios.get(`${apiBaseUrl}/api/sale`),       // ✅ FIXED
       ]);
       setPurchaseHistory(purchases.data);
       setSaleHistory(sales.data);
@@ -61,56 +61,54 @@ function Home() {
   };
 
   const handlePurchase = async () => {
-  const validRows = rows.filter(r => r.name && r.quantity && r.rate);
-  if (validRows.length === 0) {
-    alert("Please enter valid tile rows before purchasing.");
-    return;
-  }
+    const validRows = rows.filter(r => r.name && r.quantity && r.rate);
+    if (validRows.length === 0) {
+      alert("Please enter valid tile rows before purchasing.");
+      return;
+    }
 
-  try {
-    await axios.post(`${apiBaseUrl}/api/purchase`,{ items: validRows });
-    fetchData(); // refresh purchase & sale data
-    setRows([{ name: "", size: "", quantity: "", rate: "" }]);
-    alert("Purchase saved!");
-  } catch (err) {
-    console.error("Error saving purchase:", err);
-    alert("Failed to save purchase.");
-  }
-};
-
+    try {
+      await axios.post(`${apiBaseUrl}/api/purchase`, { items: validRows });
+      fetchData();
+      setRows([{ name: "", size: "", quantity: "", rate: "" }]);
+      alert("Purchase saved!");
+    } catch (err) {
+      console.error("Error saving purchase:", err);
+      alert("Failed to save purchase.");
+    }
+  };
 
   const handleSale = async () => {
-  const validRows = rows.filter(r => r.name && r.quantity && r.rate);
-  if (validRows.length === 0) {
-    alert("Please enter valid tile rows before selling.");
-    return;
-  }
-
-  const summary = getStockSummary();
-
-  for (const row of validRows) {
-    const match = summary.find(s => s.name === row.name);
-    if (!match) {
-      alert(`Item "${row.name}" is not in stock.`);
+    const validRows = rows.filter(r => r.name && r.quantity && r.rate);
+    if (validRows.length === 0) {
+      alert("Please enter valid tile rows before selling.");
       return;
     }
-    if (Number(row.quantity) > match.stock) {
-      alert(`Cannot sell ${row.quantity} of "${row.name}". Only ${match.stock} in stock.`);
-      return;
+
+    const summary = getStockSummary();
+
+    for (const row of validRows) {
+      const match = summary.find(s => s.name === row.name);
+      if (!match) {
+        alert(`Item "${row.name}" is not in stock.`);
+        return;
+      }
+      if (Number(row.quantity) > match.stock) {
+        alert(`Cannot sell ${row.quantity} of "${row.name}". Only ${match.stock} in stock.`);
+        return;
+      }
     }
-  }
 
-  try {
-    await axios.post(`${apiBaseUrl}/api/sale`,{ items: validRows });
-    fetchData(); // refresh stock
-    setRows([{ name: "", size: "", quantity: "", rate: "" }]);
-    alert("Sale saved!");
-  } catch (err) {
-    console.error("Error saving sale:", err);
-    alert("Failed to save sale.");
-  }
-};
-
+    try {
+      await axios.post(`${apiBaseUrl}/api/sale`, { items: validRows });
+      fetchData();
+      setRows([{ name: "", size: "", quantity: "", rate: "" }]);
+      alert("Sale saved!");
+    } catch (err) {
+      console.error("Error saving sale:", err);
+      alert("Failed to save sale.");
+    }
+  };
 
   const stockData = getStockSummary();
   const filteredStockData = stockData.filter(item =>
@@ -163,24 +161,9 @@ function Home() {
         ))}
 
         <div className="flex justify-center gap-4 mt-6">
-          <button
-            onClick={handleAddRow}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Add More Row
-          </button>
-          <button
-            onClick={handlePurchase}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Purchase
-          </button>
-          <button
-            onClick={handleSale}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Sale
-          </button>
+          <button onClick={handleAddRow} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add More Row</button>
+          <button onClick={handlePurchase} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Purchase</button>
+          <button onClick={handleSale} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Sale</button>
         </div>
       </main>
 
