@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`, // reads from .env
+  baseURL: `${import.meta.env.VITE_REACT_APP_API_URL}/api`,
 });
 
 // Purchase
