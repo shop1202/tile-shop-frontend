@@ -4,7 +4,6 @@ import axios from "axios";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-
 function Home() {
   const [rows, setRows] = useState([{ name: "", size: "", quantity: "", rate: "" }]);
   const [purchaseHistory, setPurchaseHistory] = useState([]);
@@ -20,8 +19,8 @@ function Home() {
   const fetchData = async () => {
     try {
       const [purchases, sales] = await Promise.all([
-        axios.get(`${apiBaseUrl}/api/purchase`),  // ✅ FIXED: removed extra argument
-        axios.get(`${apiBaseUrl}/api/sale`),       // ✅ FIXED
+        axios.get(`${apiBaseUrl}/api/purchase`),
+        axios.get(`${apiBaseUrl}/api/sale`),
       ]);
       setPurchaseHistory(purchases.data);
       setSaleHistory(sales.data);
@@ -117,11 +116,11 @@ function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white p-6">
-      <main className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-        <h1 className="text-3xl font-bold text-blue-800 text-center mb-4">Arman Tiles</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white p-4 sm:p-6">
+      <main className="max-w-4xl mx-auto bg-white p-4 sm:p-8 rounded-2xl shadow-lg">
+        <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 text-center mb-4">Arman Tiles</h1>
 
-        <div className="grid grid-cols-4 gap-4 font-semibold text-blue-700 border-b pb-2 mb-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 font-semibold text-blue-700 border-b pb-2 mb-2">
           <div>Name</div>
           <div>Size</div>
           <div>Quantity</div>
@@ -129,47 +128,23 @@ function Home() {
         </div>
 
         {rows.map((row, index) => (
-          <div key={index} className="grid grid-cols-4 gap-4 mb-2">
-            <input
-              type="text"
-              placeholder="Tile Name"
-              className="border border-blue-300 rounded p-2 focus:ring-2 focus:ring-blue-400"
-              value={row.name}
-              onChange={(e) => handleChange(index, "name", e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Size"
-              className="border border-blue-300 rounded p-2 focus:ring-2 focus:ring-blue-400"
-              value={row.size}
-              onChange={(e) => handleChange(index, "size", e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Quantity"
-              className="border border-blue-300 rounded p-2 focus:ring-2 focus:ring-blue-400"
-              value={row.quantity}
-              onChange={(e) => handleChange(index, "quantity", e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Rate"
-              className="border border-blue-300 rounded p-2 focus:ring-2 focus:ring-blue-400"
-              value={row.rate}
-              onChange={(e) => handleChange(index, "rate", e.target.value)}
-            />
+          <div key={index} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-2">
+            <input type="text" placeholder="Tile Name" className="input" value={row.name} onChange={(e) => handleChange(index, "name", e.target.value)} />
+            <input type="text" placeholder="Size" className="input" value={row.size} onChange={(e) => handleChange(index, "size", e.target.value)} />
+            <input type="number" placeholder="Quantity" className="input" value={row.quantity} onChange={(e) => handleChange(index, "quantity", e.target.value)} />
+            <input type="number" placeholder="Rate" className="input" value={row.rate} onChange={(e) => handleChange(index, "rate", e.target.value)} />
           </div>
         ))}
 
-        <div className="flex justify-center gap-4 mt-6">
-          <button onClick={handleAddRow} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add More Row</button>
-          <button onClick={handlePurchase} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Purchase</button>
-          <button onClick={handleSale} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Sale</button>
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+          <button onClick={handleAddRow} className="btn">Add More Row</button>
+          <button onClick={handlePurchase} className="btn">Purchase</button>
+          <button onClick={handleSale} className="btn">Sale</button>
         </div>
       </main>
 
-      <section className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-blue-900 text-center">Stock View</h2>
+      <section className="max-w-4xl mx-auto mt-10 bg-white p-4 sm:p-8 rounded-2xl shadow-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-blue-900 text-center">Stock View</h2>
 
         <div className="flex justify-center mb-4">
           <input
@@ -177,12 +152,12 @@ function Home() {
             placeholder="Search by Item Name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border border-blue-300 p-3 rounded w-1/2 focus:ring-2 focus:ring-blue-400"
+            className="border border-blue-300 p-3 rounded w-full sm:w-1/2 focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border border-blue-300">
+          <table className="min-w-full table-auto border border-blue-300 text-sm sm:text-base">
             <thead className="bg-blue-100 text-blue-900">
               <tr>
                 <th className="px-4 py-2 border">Item Name</th>

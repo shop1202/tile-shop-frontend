@@ -7,11 +7,13 @@ function Sale() {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${apiBaseUrl}/api/sale`)
-      .then((res) => setHistory(res.data))
-      .catch((err) => console.error("Error loading sale history:", err));
-  }, []);
+  axios.get(`${API_BASE_URL}/sale`)
+    .then((res) => {
+      // Sort data from newest to oldest
+      const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setSaleData(sorted);
+    });
+}, []);
 
   return (
     <div className="min-h-screen bg-blue-50 p-4 md:p-6">
@@ -31,7 +33,7 @@ function Sale() {
               </tr>
             </thead>
             <tbody>
-              {history.map((item, i) => (
+              {[...history].reverse().map((item, i) => (
                 <tr key={i} className="text-center hover:bg-blue-50">
                   <td className="border px-3 py-2">{item.name}</td>
                   <td className="border px-3 py-2">{item.size}</td>

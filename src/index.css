@@ -17,9 +17,8 @@ button {
 }
 
 input {
-  @apply border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400;
+  @apply border border-blue-300 rounded p-2 focus:ring-2 focus:ring-blue-400 w-full;
 }
-
 table {
   @apply w-full border-collapse;
 }
