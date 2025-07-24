@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+import { getPurchases, getSales, addPurchase, addSale } from "../api/api";
 
 function Home() {
   const [rows, setRows] = useState([{ name: "", size: "", quantity: "", rate: "" }]);
@@ -19,9 +17,10 @@ function Home() {
   const fetchData = async () => {
     try {
       const [purchases, sales] = await Promise.all([
-        axios.get(`${apiBaseUrl}/api/purchase`),
-        axios.get(`${apiBaseUrl}/api/sale`),
-      ]);
+  getPurchases(),
+  getSales(),
+]);
+
       setPurchaseHistory(purchases.data);
       setSaleHistory(sales.data);
     } catch (err) {
@@ -68,7 +67,7 @@ function Home() {
     }
 
     try {
-      await axios.post(`${apiBaseUrl}/api/purchase`, { items: validRows });
+      await addPurchase(validRows);
       fetchData();
       setRows([{ name: "", size: "", quantity: "", rate: "" }]);
       alert("Purchase saved!");
@@ -100,7 +99,7 @@ function Home() {
     }
 
     try {
-      await axios.post(`${apiBaseUrl}/api/sale`, { items: validRows });
+      await addSale(validRows);
       fetchData();
       setRows([{ name: "", size: "", quantity: "", rate: "" }]);
       alert("Sale saved!");
